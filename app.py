@@ -15,9 +15,6 @@ def home():
 def receipt():
     return render_template('Receipt.html')
     
-@app.route("/Snacks")
-def receipt():
-    return render_template('Snacks.html')
 
 
 if __name__ == '__main__':
