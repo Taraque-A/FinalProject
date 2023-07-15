@@ -14,6 +14,7 @@ def home():
 @app.route("/Receipt")
 def receipt():
     return render_template('Receipt.html')
+    
 
 
 @app.route("/", methods=['GET', 'POST'])
