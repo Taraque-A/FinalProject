@@ -1,0 +1,8 @@
+<h1>Payment</h1>
+<form method="POST" action="{{ url_for('payment') }}">
+    {{ form.csrf_token }}
+    <!-- Include payment form fields (e.g., card number, expiration date, CVV, etc.) -->
+    <div>
+        <input type="submit" value="Pay">
+    </div>
+</form>
