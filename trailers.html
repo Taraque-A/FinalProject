@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>New Movies!</title>
+
+    <!-- Bootstrap 3 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <style type="text/css" media="screen">
+        body {
+            padding-top: 80px;
+            margin-left: 2px;
+            margin-right: 2px;
+        }
+        .hanging-close {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            z-index: 9001;
+        }
+        #trailer-video {
+            width: 100%;
+            height: 100%;
+        }
+        .scale-media {
+            padding-bottom: 56.25%;
+            position: relative;
+        }
+        .scale-media iframe {
+            border: none;
+            height: 100%;
+            position: absolute;
+            width: 100%;
+            left: 0;
+            top: 0;
+            background-color: white;
+        }
+        .thumbnail:hover {
+            background-color: #333;
+            cursor: pointer;
+        }
+        .thumbnail{
+            padding: 10px;
+        }
+        .popover-title{
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .row-centered {
+            text-align:center;
+        }
+        .col-centered {
+            display:inline-block;
+            float:none;
+
+            text-align:left;
+
+            margin-right:-15px;
+        }
+        .movie-btn{
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+    <script type="text/javascript" charset="utf-8">
+        // Pause the video when the modal is closed
+        $(document).on('click', '.hanging-close, .modal-backdrop, .modal', function (event) {
+
+            $("#trailer-video-container").empty();
+        });
+        // Start playing the video whenever the trailer modal is opened
+        $(document).on('click', '.movie-img', function (event) {
+            var trailerYouTubeId = $(this).attr('data-trailer-youtube-id')
+            var sourceUrl = 'http://www.youtube.com/embed/' + trailerYouTubeId + '?autoplay=1&html5=1';
+            $("#trailer-video-container").empty().append($("<iframe></iframe>", {
+              'id': 'trailer-video',
+              'type': 'text-html',
+              'src': sourceUrl,
+              'frameborder': 0
+            }));
+        });
+        // Animate in the movies when the page loads
+        $(document).ready(function () {
+          var deferred = $.Deferred();
+          $(".movie-btn").hide();
+          var movie_tile_length = $('.movie-tile').length
+          i = 0;
+          $('.movie-tile').hide().first().show("fast", function showNext() {
+            $(this).next("div").show("fast", showNext);
+            i++;
+            if(i == movie_tile_length)
+                $(".movie-btn").show('slow');
+            console.log(i);
+          });
+
+
+          var is_touch_device = ("ontouchstart" in window) || window.DocumentTouch && document instanceof DocumentTouch;
+          $('[data-toggle="popover"]').popover({ html : true, trigger: is_touch_device ? "focus" : "hover focus"});
+
+        });
+
+        $(function() {
+            function reposition() {
+                var modal = $(this),
+                    dialog = modal.find('.modal-dialog');
+                modal.css('display', 'block');
+                dialog.css("margin-top", Math.max(0, ($(window).height() - dialog.height()) / 2));
+            }
+            $('.modal').on('show.bs.modal', reposition);
+            $(window).on('resize', function() {
+                $('.modal:visible').each(reposition);
+            });
+        });
+    </script>
+</head>
+
+  <body>
+    <!-- Trailer Video Modal -->
+    <div class="modal " id="trailer">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <a href="#" class="hanging-close" data-dismiss="modal" aria-hidden="true">
+            <img src='data:image/x-png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAACXBIWXMAAAsTAAALEwEAmpwYAAABgElEQVQ4y72TPS9DYRiGr/dg5E+0/Q8MRBgkJho1iY+FjaHMIh2QMJgQCX/AgoVExEmbaGKxSHxUWqOxWqU4vQ3nnPZoNSae6bwn9/Xc7/PkfuHfSyHFZSuvvGzFFfpNbMtRsBzZTSEN14lrUPRnue61U8e8aFmPkhoQheRca0wxreuzKn/WgmKaUEaSwq7S8ohdrEvKQJpNKgCUWCEHlMgB7LlC4/bnDkvscQxAJ3OUSJADDDP0udqIyUArAENYYJjknTMgTRtPbl+mfDkMseY72PR4s1Rd+N4dIGW6fSBPh/+3whbn3vckg8HNFE17behqeSMCcIPTsH4XuPKPr6wGgDTb3sZqKhc49DxZ5Na7+wAA52zUXA7q1lokQRYwTNOP2OUEgC5maamu1QIwD6RgnywA4/QDhil6AbhwwZTJBKMRlvOmJY3qNJCkinYU06o+JClSn6aoVFKyIahHKkvSyE95japZjTR7EeEGCynp57Q5NK+kCiooqflfxH9SX7sUOLwGLpqpAAAAAElFTkSuQmCC' alt='Close' />
+          </a>
+          <div class="scale-media" id="trailer-video-container">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Page Content -->
+    <div class="container">
+      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">New Movie Trailers</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+        <div class="row row-centered">
+
+<div class="col-md-3 col-sm-4 col-xs-6 col-centered movie-tile">
+    <div class="thumbnail">
+        <img class="img-responsive movie-img" src="https://i.ytimg.com/vi/TbR8juhxCCs/movieposter_en.jpg" alt="Winnie the Pooh" data-trailer-youtube-id="Ud-FBr74K8o" data-toggle="modal" data-target="#trailer">
+        <button class="btn btn-sm btn-block movie-btn" data-toggle="popover" data-placement="top auto" title="Winnie the Pooh" data-content="<p>Transformed into feral and bloodthirsty, Winnie-the-Pooh and Piglet terrorise Christopher Robin and a group of young women at a remote house.</p>">Winnie the Pooh: Blood and Honey</button>
+    </div>
+</div>
+
+<div class="col-md-3 col-sm-4 col-xs-6 col-centered movie-tile">
+    <div class="thumbnail">
+        <img class="img-responsive movie-img" src="https://m.media-amazon.com/images/M/MV5BMjdlZjI4YTEtNjgzZi00NTA1LWIwZWYtMDc0MzhjOWNlYjcxXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg" alt="Insidious: The Red Door" data-trailer-youtube-id="ZuQuOnYnr3Q" data-toggle="modal" data-target="#trailer">
+        <button class="btn btn-sm btn-block movie-btn" data-toggle="popover" data-placement="top auto" title="Insidious: The Red Door" data-content="<p>Josh Lambert heads east to drop his son, Dalton, off at school. However, Dalton's college dream soon becomes a living nightmare when the repressed demons of his past suddenly return to haunt them both.</p>">Insidious: The Red Door</button>
+    </div>
+</div>
+
+<div class="col-md-3 col-sm-4 col-xs-6 col-centered movie-tile">
+    <div class="thumbnail">
+        <img class="img-responsive movie-img" src="https://m.media-amazon.com/images/M/MV5BMmZiN2VmMjktZDE5OC00ZWRmLWFlMmEtYWViMTY4NjM3ZmNkXkEyXkFqcGdeQXVyMTI2MTc2ODM3._V1_FMjpg_UX1000_.jpg" alt="EVIL DEAD RISE" data-trailer-youtube-id="smTK_AeAPHs" data-toggle="modal" data-target="#trailer">
+        <button class="btn btn-sm btn-block movie-btn" data-toggle="popover" data-placement="top auto" title="EVIL DEAD RISE" data-content="<p>A reunion between two estranged sisters gets cut short by the rise of flesh-possessing demons, thrusting them into a primal battle for survival as they face the most nightmarish version of family imaginable.</p>">EVIL DEAD RISE</button>
+    </div>
+</div>
+
+<div class="col-md-3 col-sm-4 col-xs-6 col-centered movie-tile">
+    <div class="thumbnail">
+        <img class="img-responsive movie-img" src="https://m.media-amazon.com/images/M/MV5BYjhiNjBlODctY2ZiOC00YjVlLWFlNzAtNTVhNzM1YjI1NzMxXkEyXkFqcGdeQXVyMjQxNTE1MDA@._V1_FMjpg_UX1000_.jpg" alt="Avatar: The Way of Water: Across the Spider-Verse" data-trailer-youtube-id="d9MyW72ELq0" data-toggle="modal" data-target="#trailer">
+        <button class="btn btn-sm btn-block movie-btn" data-toggle="popover" data-placement="top auto" title="Avatar: The Way of Water" data-content="<p>Jake Sully and Ney'tiri have formed a family and are doing everything to stay together. However, they must leave their home and explore the regions of Pandora. When an ancient threat resurfaces, Jake must fight a difficult war against the humans.</p>">Avatar: The Way of Water</button>
+    </div>
+</div>
+
+<div class="col-md-3 col-sm-4 col-xs-6 col-centered movie-tile">
+    <div class="thumbnail">
+        <img class="img-responsive movie-img" src="https://m.media-amazon.com/images/M/MV5BMjg3N2M3OWUtZGQ3NC00OGI1LTllZDUtMTdiYWQxMTk0YTg2XkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_FMjpg_UX1000_.jpg" alt="No Hard Feelings" data-trailer-youtube-id="P15S6ND8kbQ" data-toggle="modal" data-target="#trailer">
+        <button class="btn btn-sm btn-block movie-btn" data-toggle="popover" data-placement="top auto" title="No Hard Feelings" data-content="<p>On the brink of losing her childhood home, a desperate woman agrees to date a wealthy couple's introverted and awkward 19-year-old son. However, he proves to be more of a challenge than she expected, and time is running out before she loses it all.</p>">No Hard Feelings</button>
+    </div>
+</div>
+
+<div class="col-md-3 col-sm-4 col-xs-6 col-centered movie-tile">
+    <div class="thumbnail">
+        <img class="img-responsive movie-img" src="https://upload.wikimedia.org/wikipedia/en/0/02/Extraction_2_poster.jpg" alt="Extraction 2" data-trailer-youtube-id="Y274jZs5s7s" data-toggle="modal" data-target="#trailer">
+        <button class="btn btn-sm btn-block movie-btn" data-toggle="popover" data-placement="top auto" title="Extraction 2" data-content="<p>After barely surviving his grievous wounds from his mission in Dhaka, Bangladesh, Tyler Rake is back, and his team is ready to take on their next mission.</p>">Extraction 2</button>
+    </div>
+</div>
+
+        </div>
+    </div>
+  </body>
+</html>
